@@ -1,5 +1,6 @@
 {
     "name": "00022-microbit-ENS160-status-check",
+    "version": "0.1.0",
     "description": "",
     "dependencies": {
         "core": "*",
