@@ -67,8 +67,8 @@ defining_satus_images()
 let speed = 10000
 let old_time = control.millis()
 ens160_status = 100
-ENS160.Address(ENS160_I2C_ADDRESS.ADDR_0x52)
-BME280.Address(BME280_I2C_ADDRESS.ADDR_0x76)
+ENS160.Address(ENS160_I2C_ADDRESS.ADDR_0x53)
+BME280.Address(BME280_I2C_ADDRESS.ADDR_0x77)
 ENS160.SetHumidity(BME280.humidity())
 ENS160.SetTemp(BME280.temperature(BME280_T.T_C))
 serial.redirectToUSB()
@@ -93,7 +93,7 @@ basic.forever(function () {
         serial.writeLine("STATUS_FLAG=3, No valid output")
         blink(image_no_valid_input, 400)
     } else {
-    	serial.writeLine("Invalid STATUS_FLAG value. Seek help!")
+        serial.writeLine("Invalid STATUS_FLAG value. Seek help!")
         basic.showString("ERROR")
     }
 })
