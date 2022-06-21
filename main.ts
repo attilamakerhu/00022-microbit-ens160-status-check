@@ -10,6 +10,21 @@ function blink (image: Image, animation_speed: number) {
         }
     }
 }
+function send_message_over_serial (x: number) {
+    if (x == 100) {
+        serial.writeLine("Waiting for ENS160 data...")
+    } else if (x == 0) {
+        serial.writeLine("STATUS_FLAG=0, Operating ok")
+    } else if (x == 400) {
+        serial.writeLine("STATUS_FLAG=1, Warm-up")
+    } else if (x == 2) {
+        serial.writeLine("STATUS_FLAG=2, Initial Start-up")
+    } else if (x == 3) {
+        serial.writeLine("STATUS_FLAG=3, No valid output")
+    } else {
+        serial.writeLine("Invalid STATUS_FLAG value. Seek help!")
+    }
+}
 function collect_ens160_data () {
     eco2 = ENS160.eCO2()
     voc = ENS160.TVOC()
@@ -75,25 +90,20 @@ serial.redirectToUSB()
 basic.forever(function () {
     if (control.millis() - old_time > speed) {
         collect_ens160_data()
+        send_message_over_serial(ens160_status)
         old_time = control.millis()
     }
     if (ens160_status == 100) {
         blink(image_waiting_for_ens160, 400)
-        serial.writeLine("Waiting for ENS160 data...")
     } else if (ens160_status == 0) {
         blink(image_operating_ok, 400)
-        serial.writeLine("STATUS_FLAG=0, Operating ok")
     } else if (ens160_status == 400) {
-        blink(image_warmup, 400)
-        serial.writeLine("STATUS_FLAG=1, Warm-up")
+        blink(image_warmup, 1)
     } else if (ens160_status == 2) {
         blink(image_initial_startup, 400)
-        serial.writeLine("STATUS_FLAG=2, Initial Start-up")
     } else if (ens160_status == 3) {
-        serial.writeLine("STATUS_FLAG=3, No valid output")
         blink(image_no_valid_input, 400)
     } else {
-        serial.writeLine("Invalid STATUS_FLAG value. Seek help!")
         basic.showString("ERROR")
     }
 })
